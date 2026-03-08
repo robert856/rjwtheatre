@@ -1,3 +1,4 @@
+<!-- Version 1.0 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -85,8 +86,8 @@
 
     h1 {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(2.8rem, 6vw, 5rem);
-      font-weight: 700;
+      font-size: clamp(2.24rem, 4.8vw, 4rem);
+      font-weight: 400;
       letter-spacing: 0.04em;
       color: var(--deep-walnut);
       line-height: 1.1;
@@ -186,10 +187,181 @@
       animation: fadeUp 1s ease 0.85s both;
     }
 
+    /* Carousel */
+    .carousel-section {
+      margin-top: 54px;
+      animation: fadeUp 1s ease 0.85s both;
+    }
+
+    .carousel-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .carousel-track-wrapper {
+      overflow: hidden;
+      flex: 1;
+      border-radius: 3px;
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+
+    .carousel-slide {
+      min-width: 100%;
+    }
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: 1fr;
+      gap: 10px;
+    }
+
+    .image-cell {
+      aspect-ratio: 1;
+    }
+
+    .image-cell img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 2px;
+      box-shadow: 0 2px 8px rgba(44,31,14,0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .image-cell img:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 16px rgba(44,31,14,0.25);
+    }
+
+    .carousel-btn {
+      background: none;
+      border: 1px solid var(--aged-gold);
+      color: var(--aged-gold);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .carousel-btn:hover {
+      background: var(--aged-gold);
+      color: var(--warm-white);
+    }
+
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--light-grain);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .dot.active {
+      background: var(--aged-gold);
+    }
+
     @media (max-width: 600px) {
       .page-wrapper { padding: 48px 24px 72px; }
       .bio { padding: 32px 28px; }
     }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 12, 4, 0.95);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox-img {
+      max-width: 85vw;
+      max-height: 75vh;
+      object-fit: contain;
+      border-radius: 3px;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.6);
+    }
+
+    .lightbox-controls {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .lightbox-btn {
+      background: none;
+      border: 1px solid var(--aged-gold);
+      color: var(--aged-gold);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .lightbox-btn:hover {
+      background: var(--aged-gold);
+      color: var(--deep-walnut);
+    }
+
+    .lightbox-back {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--aged-gold);
+      background: none;
+      border: 1px solid var(--aged-gold);
+      padding: 10px 24px;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .lightbox-back:hover {
+      background: var(--aged-gold);
+      color: var(--deep-walnut);
+    }
+
+    .lightbox-counter {
+      font-family: 'Cormorant Garamond', serif;
+      color: rgba(184,150,90,0.6);
+      font-size: 0.9rem;
+      letter-spacing: 0.15em;
+      margin-top: 12px;
+    }
+
+    .image-cell img {
+      cursor: pointer;
+    }
+
   </style>
 </head>
 <body>
@@ -221,12 +393,129 @@
       </p>
     </div>
 
-    <div class="bottom-rule">
+    <!-- Image Carousel -->
+    <div class="carousel-section">
+      <div class="carousel-container">
+        <button class="carousel-btn prev" onclick="moveCarousel(-1)">&#8592;</button>
+
+        <div class="carousel-track-wrapper">
+          <div class="carousel-track" id="carouselTrack">
+
+            <!-- Slide 1 -->
+            <div class="carousel-slide">
+              <div class="image-grid">
+                <div class="image-cell"><img src="https://placehold.co/400x400/2c1f0e/b8965a?text=Image+1" alt="Image 1" /></div>
+                <div class="image-cell"><img src="https://placehold.co/400x400/2c1f0e/b8965a?text=Image+2" alt="Image 2" /></div>
+                <div class="image-cell"><img src="https://placehold.co/400x400/2c1f0e/b8965a?text=Image+3" alt="Image 3" /></div>
+              </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="carousel-slide">
+              <div class="image-grid">
+                <div class="image-cell"><img src="https://placehold.co/400x400/2c1f0e/b8965a?text=Image+4" alt="Image 4" /></div>
+                <div class="image-cell"><img src="https://placehold.co/400x400/2c1f0e/b8965a?text=Image+5" alt="Image 5" /></div>
+                <div class="image-cell"><img src="https://placehold.co/400x400/2c1f0e/b8965a?text=Image+6" alt="Image 6" /></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <button class="carousel-btn next" onclick="moveCarousel(1)">&#8594;</button>
+      </div>
+
+      <!-- Dots -->
+      <div class="carousel-dots">
+        <span class="dot active" onclick="goToSlide(0)"></span>
+        <span class="dot" onclick="goToSlide(1)"></span>
+      </div>
+    </div>
+
+
       <div class="top-rule">
         <div class="top-rule-diamond"></div>
       </div>
     </div>
 
   </div>
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <img class="lightbox-img" id="lightboxImg" src="" alt="" />
+    <div class="lightbox-controls">
+      <button class="lightbox-btn" onclick="lightboxMove(-1)">&#8592;</button>
+      <button class="lightbox-back" onclick="closeLightbox()">&#8592; Back</button>
+      <button class="lightbox-btn" onclick="lightboxMove(1)">&#8594;</button>
+    </div>
+    <div class="lightbox-counter" id="lightboxCounter"></div>
+  </div>
+
+  <script>
+    // Carousel
+    let current = 0;
+    const total = 2;
+
+    function moveCarousel(dir) {
+      current = (current + dir + total) % total;
+      updateCarousel();
+    }
+
+    function goToSlide(index) {
+      current = index;
+      updateCarousel();
+    }
+
+    function updateCarousel() {
+      document.getElementById('carouselTrack').style.transform = `translateX(-${current * 100}%)`;
+      document.querySelectorAll('.dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === current);
+      });
+    }
+
+    // Lightbox
+    const allImages = Array.from(document.querySelectorAll('.image-cell img'));
+    let lightboxIndex = 0;
+
+    allImages.forEach((img, i) => {
+      img.addEventListener('click', () => openLightbox(i));
+    });
+
+    function openLightbox(index) {
+      lightboxIndex = index;
+      updateLightbox();
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function lightboxMove(dir) {
+      lightboxIndex = (lightboxIndex + dir + allImages.length) % allImages.length;
+      updateLightbox();
+    }
+
+    function updateLightbox() {
+      const img = allImages[lightboxIndex];
+      document.getElementById('lightboxImg').src = img.src;
+      document.getElementById('lightboxImg').alt = img.alt;
+      document.getElementById('lightboxCounter').textContent = `${lightboxIndex + 1} / ${allImages.length}`;
+    }
+
+    // Close lightbox on background click
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+      if (e.target === this) closeLightbox();
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+      if (!document.getElementById('lightbox').classList.contains('open')) return;
+      if (e.key === 'ArrowLeft') lightboxMove(-1);
+      if (e.key === 'ArrowRight') lightboxMove(1);
+      if (e.key === 'Escape') closeLightbox();
+    });
+  </script>
 </body>
 </html>
